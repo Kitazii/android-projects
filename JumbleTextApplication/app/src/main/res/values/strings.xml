@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">JumbleTextApplication</string>
+    <string name="user_entered_text">This is some user-entered text</string>
+    <string name="reverse_words">Reverse words</string>
+    <string name="reversed_text">Reversed text value</string>
+</resources>

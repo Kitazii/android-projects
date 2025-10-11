@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">TestApplication3</string>
+    <string name="welcome_msg">Welcome to Mobile Device Programming</string>
+    <string name="name_input_msg">Enter your name: </string>
+    <string name="exit_msg">Press to Exit</string>
+</resources>

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">calculator_lab2</string>
+    <string name="enter_length">Enter length</string>
+    <string name="example_num1">e.g., 5.2</string>
+    <string name="example_num2">e.g., 3.0</string>
+    <string name="enter_width">Enter width</string>
+    <string name="calculate_area">Calculate area</string>
+</resources>

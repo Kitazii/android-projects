@@ -1,0 +1,38 @@
+# Android Studio & IntelliJ
+*.iml
+.idea/
+.gradle/
+local.properties
+/.cxx/
+/captures/
+/outputs/
+/build/
+.gradle/
+/navigation/
+/.**/build/
+
+# Generated files
+*.apk
+*.ap_
+*.dex
+*.class
+*.log
+
+# Keystore files
+*.jks
+*.keystore
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Project-specific exclusions
+**/bin/
+**/obj/
+**/out/
+
+# Only include source code and resources
+!**/src/**/*.java
+!**/src/**/*.kt
+!**/src/**/*.xml
+!**/res/**/*.xml
