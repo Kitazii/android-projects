@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Spinner_test</string>
+    <string name="cPrompt">Select Background Colour</string>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="pizza_red">#E74C3C</color>
+    <color name="pizza_orange">#FF8C42</color>
+    <color name="pizza_red_dark">#C0392B</color>
+    <color name="text_dark">#2C3E50</color>
+</resources>

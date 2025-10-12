@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Pizza base circle -->
+    <path
+        android:fillColor="@color/pizza_orange"
+        android:pathData="M60,60m-50,0a50,50 0,1,1 100,0a50,50 0,1,1 -100,0"/>
+
+    <!-- Pizza crust edge -->
+    <path
+        android:fillColor="@color/pizza_red_dark"
+        android:pathData="M60,10A50,50 0,0,1 110,60A50,50 0,0,1 60,110A50,50 0,0,1 10,60A50,50 0,0,1 60,10M60,20A40,40 0,0,0 20,60A40,40 0,0,0 60,100A40,40 0,0,0 100,60A40,40 0,0,0 60,20Z"/>
+
+    <!-- Pizza slice lines (white) -->
+    <!-- Vertical line -->
+    <path
+        android:strokeColor="@color/white"
+        android:strokeWidth="2.5"
+        android:pathData="M60,15 L60,105"/>
+
+    <!-- Horizontal line -->
+    <path
+        android:strokeColor="@color/white"
+        android:strokeWidth="2.5"
+        android:pathData="M15,60 L105,60"/>
+
+    <!-- Diagonal line top-left to bottom-right -->
+    <path
+        android:strokeColor="@color/white"
+        android:strokeWidth="2.5"
+        android:pathData="M25,25 L95,95"/>
+
+    <!-- Diagonal line top-right to bottom-left -->
+    <path
+        android:strokeColor="@color/white"
+        android:strokeWidth="2.5"
+        android:pathData="M95,25 L25,95"/>
+
+    <!-- Pepperoni slices -->
+    <path
+        android:fillColor="@color/pizza_red"
+        android:pathData="M45,45m-8,0a8,8 0,1,1 16,0a8,8 0,1,1 -16,0"/>
+
+    <path
+        android:fillColor="@color/pizza_red"
+        android:pathData="M75,45m-8,0a8,8 0,1,1 16,0a8,8 0,1,1 -16,0"/>
+
+    <path
+        android:fillColor="@color/pizza_red"
+        android:pathData="M60,70m-8,0a8,8 0,1,1 16,0a8,8 0,1,1 -16,0"/>
+
+    <path
+        android:fillColor="@color/pizza_red"
+        android:pathData="M40,75m-7,0a7,7 0,1,1 14,0a7,7 0,1,1 -14,0"/>
+
+    <path
+        android:fillColor="@color/pizza_red"
+        android:pathData="M80,75m-7,0a7,7 0,1,1 14,0a7,7 0,1,1 -14,0"/>
+</vector>
