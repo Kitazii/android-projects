@@ -66,85 +66,109 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="20dip"
+            android:layout_marginBottom="15dip"
             android:text="Customize Your Pizza"
             android:textColor="@color/text_dark"
             android:textSize="20dip" />
 
-        <!-- RadioGroup for pizza size -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dip"
-            android:text="Crust type (1 only):"
-            android:textColor="@color/text_dark"
-            android:textSize="16dip" />
+        <!-- Horizontal layout for crust type and toppings side by side -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_marginBottom="15dip">
 
-        <RadioGroup
-            android:id="@+id/sizeRadioGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dip"
-            android:orientation="vertical">
-
-            <RadioButton
-                android:id="@+id/radioStuffed"
-                android:layout_width="wrap_content"
+            <!-- Crust Type Section (Left) -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Stuffed crust"
-                android:textSize="14dip" />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingEnd="10dip">
 
-            <RadioButton
-                android:id="@+id/radioThin"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:text="Crust type (1 only):"
+                    android:textColor="@color/text_dark"
+                    android:textSize="16dip" />
+
+                <RadioGroup
+                    android:id="@+id/sizeRadioGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/radioStuffed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Stuffed crust"
+                        android:textSize="14dip" />
+
+                    <RadioButton
+                        android:id="@+id/radioThin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Thin and crispy"
+                        android:textSize="14dip" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <!-- Toppings Section (Right) -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Thin and crispy"
-                android:textSize="14dip" />
-        </RadioGroup>
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingStart="10dip">
 
-        <!-- Checkbox list for toppings -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dip"
-            android:text="Select Toppings:"
-            android:textColor="@color/text_dark"
-            android:textSize="16dip" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:text="Select Toppings:"
+                    android:textColor="@color/text_dark"
+                    android:textSize="16dip" />
 
-        <CheckBox
-            android:id="@+id/checkboxMushrooms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mushrooms"
-            android:textSize="14dip" />
+                <CheckBox
+                    android:id="@+id/checkboxMushrooms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mushrooms"
+                    android:textSize="14dip" />
 
-        <CheckBox
-            android:id="@+id/checkboxSweetcorn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sweetcorn"
-            android:textSize="14dip" />
+                <CheckBox
+                    android:id="@+id/checkboxSweetcorn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sweetcorn"
+                    android:textSize="14dip" />
 
-        <CheckBox
-            android:id="@+id/checkboxOnions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Onions"
-            android:textSize="14dip" />
+                <CheckBox
+                    android:id="@+id/checkboxOnions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Onions"
+                    android:textSize="14dip" />
 
-        <CheckBox
-            android:id="@+id/checkboxPeppers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dip"
-            android:text="Peppers"
-            android:textSize="14dip" />
+                <CheckBox
+                    android:id="@+id/checkboxPeppers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Peppers"
+                    android:textSize="14dip" />
+            </LinearLayout>
+        </LinearLayout>
 
         <!-- Switch for extra cheese -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dip"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dip"
             android:orientation="horizontal">
 
             <TextView
