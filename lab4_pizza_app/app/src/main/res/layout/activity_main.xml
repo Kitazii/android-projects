@@ -81,7 +81,7 @@
             android:textSize="16dip" />
 
         <RadioGroup
-            android:id="@+id/sizeRadioGroup"
+            android:id="@+id/crustRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dip"

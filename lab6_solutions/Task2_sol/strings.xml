@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">PizzaFragment</string>
+    <string name="hello">Foley\'s Pizza Express</string>
+    <string name="baseRequest">How do you want your base</string>
+    <string name="base1String">Stuffed Crust</string>
+    <string name="base2String">Thin and Crispy</string>
+    <string name="choiceRequest">Choice of Toppings?</string>
+    <string name="topping1">Mushrooms</string>
+    <string name="topping2">Sweetcorn</string>
+    <string name="topping3">Onions</string>
+    <string name="topping4">Peppers</string>
+    <string name="extraRequest">Extra Cheese</string>
+    <string name="emailRequest">Send Confirmation Email To:</string>
+    <string name="submitRequest">Submit Order</string>
+
+</resources>

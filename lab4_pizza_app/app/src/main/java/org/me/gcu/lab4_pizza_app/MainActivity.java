@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         emailInput = findViewById(R.id.emailInput);
 
         // Initialize pizza customization UI elements
-        crustRadioGroup = findViewById(R.id.sizeRadioGroup);
+        crustRadioGroup = findViewById(R.id.crustRadioGroup);
         radioStuffed = findViewById(R.id.radioStuffed);
         radioThin = findViewById(R.id.radioThin);
         checkboxMushrooms = findViewById(R.id.checkboxMushrooms);
@@ -168,5 +168,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         orderDetails.append(switchExtraCheese.isChecked() ? "Yes" : "No");
 
         return orderDetails.toString();
+    }
+
+    public void onInputSendCrustSelection(String input)
+    {
+        Log.d("MainTag",input);
+//        fragment3.updatebase(input);
+    }
+
+    public void onInputSendToppings(String input)
+    {
+        Log.d("Main Tag",input);
+//        fragment3.updateToppings(input);
     }
 }
