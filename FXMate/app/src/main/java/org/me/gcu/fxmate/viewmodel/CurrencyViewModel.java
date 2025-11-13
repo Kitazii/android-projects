@@ -40,7 +40,38 @@ public class CurrencyViewModel extends ViewModel {
     }
 
     /**
-     * Loads and parses currency data from XML string
+     * Fetches currency data from RSS feed using background thread
+     * This method uses the Repository's Handler pattern implementation
+     * The callback will be invoked on the main thread, making it safe to update LiveData
+     */
+    public void fetchCurrencyData() {
+        isLoading.setValue(true);
+        errorMessage.setValue(null);
+
+        Log.d(TAG, "Requesting currency data from repository...");
+
+        // Call repository method which handles threading internally
+        repository.fetchAndParseRates(new CurrencyRepository.DataCallback() {
+            @Override
+            public void onDataLoaded(List<CurrencyRate> rates) {
+                // This runs on main thread thanks to Handler.post() in repository
+                Log.d(TAG, "Successfully received " + rates.size() + " currency rates");
+                currencyRates.setValue(rates);
+                isLoading.setValue(false);
+            }
+
+            @Override
+            public void onError(String error) {
+                // This runs on main thread thanks to Handler.post() in repository
+                Log.e(TAG, "Error loading currency data: " + error);
+                errorMessage.setValue(error);
+                isLoading.setValue(false);
+            }
+        });
+    }
+
+    /**
+     * Loads and parses currency data from XML string (for testing purposes)
      * @param xmlData XML string containing RSS feed data
      */
     public void loadCurrencyData(String xmlData) {

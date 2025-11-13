@@ -1,8 +1,10 @@
 package org.me.gcu.fxmate.repository;
 
+import android.os.Handler;
 import android.util.Log;
 
 import org.me.gcu.fxmate.model.CurrencyRate;
+import org.me.gcu.fxmate.network.RssFeedFetcher;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -17,6 +19,16 @@ import java.util.regex.Pattern;
 public class CurrencyRepository {
 
     private static final String TAG = "CurrencyRepository";
+    private static final String RSS_FEED_URL = "https://www.fx-exchange.com/gbp/rss.xml";
+
+    /**
+     * Callback interface for asynchronous data fetching
+     * This allows the Repository to communicate back to the ViewModel on the main thread
+     */
+    public interface DataCallback {
+        void onDataLoaded(List<CurrencyRate> rates);
+        void onError(String errorMessage);
+    }
 
     // Pattern to extract currency codes from title: "British Pound Sterling(GBP)/United Arab Emirates Dirham(AED)"
     private static final Pattern TITLE_PATTERN = Pattern.compile("([^(]+)\\(([A-Z]{3})\\)/([^(]+)\\(([A-Z]{3})\\)");
@@ -33,6 +45,88 @@ public class CurrencyRepository {
             instance = new CurrencyRepository();
         }
         return instance;
+    }
+
+    /**
+     * Fetches and parses currency data from RSS feed using background thread
+     * This method implements the Handler pattern following ProgressBar_solutions example
+     *
+     * Threading approach:
+     * 1. Creates Handler on main thread (for UI updates)
+     * 2. Spawns worker thread to fetch RSS feed and parse data
+     * 3. Uses Handler.post() to send results back to main thread
+     *
+     * @param callback Callback to receive parsed data on main thread
+     */
+    public void fetchAndParseRates(final DataCallback callback) {
+        // Create Handler bound to the main thread's message queue
+        final Handler mHandler = new Handler();
+
+        Log.d(TAG, "Starting background thread to fetch RSS feed...");
+
+        // Create Thread to handle the long-running network operation
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "Worker thread started - fetching RSS feed from: " + RSS_FEED_URL);
+
+                try {
+                    // Step 1: Fetch RSS feed from network (blocking I/O operation)
+                    RssFeedFetcher fetcher = new RssFeedFetcher();
+                    final String xmlData = fetcher.fetchRssFeed(RSS_FEED_URL);
+
+                    if (xmlData == null || xmlData.isEmpty()) {
+                        // Network error - post error to main thread
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                callback.onError("Failed to download RSS feed");
+                            }
+                        });
+                        return;
+                    }
+
+                    Log.d(TAG, "RSS feed downloaded successfully, parsing XML...");
+
+                    // Step 2: Parse the XML data (still on worker thread)
+                    final List<CurrencyRate> rates = parseRates(xmlData);
+
+                    if (rates == null || rates.isEmpty()) {
+                        // Parsing error - post error to main thread
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                callback.onError("Failed to parse currency data");
+                            }
+                        });
+                        return;
+                    }
+
+                    Log.d(TAG, "Parsing complete. Posting " + rates.size() + " rates to main thread...");
+
+                    // Step 3: Post results to main thread using Handler
+                    // This ensures UI updates happen on the main thread
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onDataLoaded(rates);
+                        }
+                    });
+
+                } catch (Exception e) {
+                    Log.e(TAG, "Error in worker thread: " + e.getMessage(), e);
+
+                    // Post error to main thread
+                    final String errorMsg = e.getMessage();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onError("Error fetching data: " + errorMsg);
+                        }
+                    });
+                }
+            }
+        }).start(); // Start the worker thread
     }
 
     /**
@@ -59,7 +153,7 @@ public class CurrencyRepository {
 
                         if ("item".equalsIgnoreCase(name)) {
                             current = new CurrencyRate();
-                            Log.d(TAG, "↳ New Currency Rate item found!");
+                            Log.d(TAG, "New Currency Rate item found!");
                         }
                         break;
                     }

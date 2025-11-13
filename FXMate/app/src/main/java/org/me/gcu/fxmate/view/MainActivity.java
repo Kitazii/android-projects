@@ -2,6 +2,9 @@ package org.me.gcu.fxmate.view;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,11 +19,17 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "FXMate";
     private CurrencyViewModel viewModel;
+    private ProgressBar loadingSpinner;
+    private TextView statusTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Initialize UI components
+        loadingSpinner = findViewById(R.id.loadingSpinner);
+        statusTextView = findViewById(R.id.statusTextView);
 
         // Initialize ViewModel
         viewModel = new ViewModelProvider(this).get(CurrencyViewModel.class);
@@ -28,44 +37,10 @@ public class MainActivity extends AppCompatActivity {
         // Setup observers
         setupObservers();
 
-        // TODO: Replace with actual XML data from network fetch
-        // For now, testing with sample data
-        String sampleXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                "<rss version=\"2.0\">" +
-                "<channel>" +
-                "<title>British Pound Sterling(GBP) Currency Exchange Rates</title>" +
-                "<link>https://www.fx-exchange.com/gbp/</link>" +
-                "<description>British Pound Sterling(GBP) Currency Exchange Rates</description>" +
-                "<pubDate>Mon Oct 20 2025 6:01:00 UTC</pubDate>" +
-                "<item>" +
-                "<title>British Pound Sterling(GBP)/United Arab Emirates Dirham(AED)</title>" +
-                "<link>https://www.fx-exchange.com/gbp/aed.html</link>" +
-                "<pubDate>Mon Oct 20 2025 6:01:00 UTC</pubDate>" +
-                "<description>1 British Pound Sterling = 4.9354 United Arab Emirates Dirham</description>" +
-                "</item>" +
-                "<item>" +
-                "<title>British Pound Sterling(GBP)/United States Dollar(USD)</title>" +
-                "<link>https://www.fx-exchange.com/gbp/usd.html</link>" +
-                "<pubDate>Mon Oct 20 2025 6:01:00 UTC</pubDate>" +
-                "<description>1 British Pound Sterling = 1.3436 United States Dollar</description>" +
-                "</item>" +
-                "<item>" +
-                "<title>British Pound Sterling(GBP)/Euro(EUR)</title>" +
-                "<link>https://www.fx-exchange.com/gbp/eur.html</link>" +
-                "<pubDate>Mon Oct 20 2025 6:01:00 UTC</pubDate>" +
-                "<description>1 British Pound Sterling = 1.1678 Euro</description>" +
-                "</item>" +
-                "<item>" +
-                "<title>British Pound Sterling(GBP)/Japanese Yen(JPY)</title>" +
-                "<link>https://www.fx-exchange.com/gbp/jpy.html</link>" +
-                "<pubDate>Mon Oct 20 2025 6:01:00 UTC</pubDate>" +
-                "<description>1 British Pound Sterling = 149.8234 Japanese Yen</description>" +
-                "</item>" +
-                "</channel>" +
-                "</rss>";
-
-        // Load data through ViewModel
-        viewModel.loadCurrencyData(sampleXML);
+        // Fetch currency data from RSS feed using background thread
+        // This triggers the Handler+Thread pattern in CurrencyRepository
+        Log.d(TAG, "Initiating currency data fetch...");
+        viewModel.fetchCurrencyData();
     }
 
     /**
@@ -80,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "#" + (i + 1) + " " + currencyRates.get(i).toString());
                 }
 
+                // Update UI with success message
+                statusTextView.setText("Successfully loaded " + currencyRates.size() + " currency rates");
+
                 // Example: Get main currencies
                 List<CurrencyRate> mainCurrencies = viewModel.getMainCurrencies();
                 Log.d(TAG, "---------- Main Currencies (" + mainCurrencies.size() + ") ----------");
@@ -89,10 +67,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Observe loading state
+        // Observe loading state - control spinner visibility
         viewModel.getIsLoading().observe(this, isLoading -> {
             if (isLoading != null) {
-                Log.d(TAG, isLoading ? "Loading data..." : "Data loading complete");
+                // Show/hide loading spinner based on loading state
+                loadingSpinner.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+
+                if (isLoading) {
+                    Log.d(TAG, "Loading data...");
+                    statusTextView.setText("Loading currency data...");
+                } else {
+                    Log.d(TAG, "Data loading complete");
+                }
             }
         });
 
@@ -100,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getErrorMessage().observe(this, errorMessage -> {
             if (errorMessage != null && !errorMessage.isEmpty()) {
                 Log.e(TAG, "Error: " + errorMessage);
+                statusTextView.setText("Error: " + errorMessage);
             }
         });
     }
