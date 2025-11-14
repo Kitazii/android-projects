@@ -135,6 +135,9 @@ public class CurrencyRepository {
      * @return List of parsed CurrencyRate objects
      */
     public List<CurrencyRate> parseRates(String dataToParse) {
+        // Sanitize XML to handle malformed entities (e.g., unescaped & characters)
+        dataToParse = sanitizeXml(dataToParse);
+
         List<CurrencyRate> results = new ArrayList<>();
         CurrencyRate current = null;        // the CurrencyRate we're building
         String currentText = null;           // holds inner text between tags
@@ -142,6 +145,13 @@ public class CurrencyRepository {
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
+
+            // Enable relaxed mode to handle malformed XML (e.g., invalid HTML attributes in RSS feed)
+            // This makes the parser more tolerant of XML errors like:
+            // - Malformed attributes: <script defer='2.0'>
+            // - Missing quotes, invalid syntax, etc.
+            factory.setFeature("http://xmlpull.org/v1/doc/features.html#relaxed", true);
+
             XmlPullParser xpp = factory.newPullParser();
             xpp.setInput(new StringReader(dataToParse));
 
@@ -226,6 +236,27 @@ public class CurrencyRepository {
         }
 
         return results;
+    }
+
+    /**
+     * Sanitizes XML data to handle common malformed entities
+     * Replaces unescaped & characters with &amp; (except for valid XML entities)
+     * Ensures defensibility alongside the relaxed mode
+     *
+     * Valid XML entities that won't be replaced: &amp; &lt; &gt; &quot; &apos; &#digits; &#xHEX;
+     *
+     * @param xml Raw XML string that may contain malformed entities
+     * @return Sanitized XML string safe for parsing
+     */
+    private String sanitizeXml(String xml) {
+        if (xml == null || xml.isEmpty()) {
+            return xml;
+        }
+
+        // Replace unescaped & characters (but preserve valid XML entities)
+        // This regex matches & that is NOT followed by valid entity patterns
+        // Valid entities: &amp; &lt; &gt; &quot; &apos; &#123; &#xABC;
+        return xml.replaceAll("&(?!(amp|lt|gt|quot|apos|#\\d+|#x[0-9a-fA-F]+);)", "&amp;");
     }
 
     // Helper methods

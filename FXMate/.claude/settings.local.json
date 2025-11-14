@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(del \"C:\\Users\\mrkie\\AndroidStudioProjects\\FXMate\\app\\src\\main\\java\\org\\me\\gcu\\fxmate\\view\\CurrencyListFragment.java\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

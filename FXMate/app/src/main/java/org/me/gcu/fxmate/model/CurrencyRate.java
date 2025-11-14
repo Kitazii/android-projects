@@ -2,7 +2,10 @@ package org.me.gcu.fxmate.model;
 
 import androidx.annotation.NonNull;
 
-public class CurrencyRate {
+import java.io.Serializable;
+
+public class CurrencyRate implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String title;
     private String baseCurrency;
     private String baseCode;

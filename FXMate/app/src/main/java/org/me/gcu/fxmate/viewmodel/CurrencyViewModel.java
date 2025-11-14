@@ -20,6 +20,9 @@ public class CurrencyViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isLoading;
     private final MutableLiveData<String> errorMessage;
 
+    // Guard flag to prevent multiple simultaneous fetches
+    private boolean isFetching = false;
+
     public CurrencyViewModel() {
         repository = CurrencyRepository.getInstance();
         currencyRates = new MutableLiveData<>();
@@ -45,6 +48,19 @@ public class CurrencyViewModel extends ViewModel {
      * The callback will be invoked on the main thread, making it safe to update LiveData
      */
     public void fetchCurrencyData() {
+        // Guard: prevent multiple simultaneous fetches
+        if (isFetching) {
+            Log.w(TAG, "Fetch already in progress, ignoring duplicate request");
+            return;
+        }
+
+        // Also skip if we already have data
+        if (currencyRates.getValue() != null && !currencyRates.getValue().isEmpty()) {
+            Log.d(TAG, "Data already loaded (" + currencyRates.getValue().size() + " rates), skipping fetch");
+            return;
+        }
+
+        isFetching = true;
         isLoading.setValue(true);
         errorMessage.setValue(null);
 
@@ -58,6 +74,7 @@ public class CurrencyViewModel extends ViewModel {
                 Log.d(TAG, "Successfully received " + rates.size() + " currency rates");
                 currencyRates.setValue(rates);
                 isLoading.setValue(false);
+                isFetching = false;
             }
 
             @Override
@@ -66,6 +83,7 @@ public class CurrencyViewModel extends ViewModel {
                 Log.e(TAG, "Error loading currency data: " + error);
                 errorMessage.setValue(error);
                 isLoading.setValue(false);
+                isFetching = false;
             }
         });
     }
