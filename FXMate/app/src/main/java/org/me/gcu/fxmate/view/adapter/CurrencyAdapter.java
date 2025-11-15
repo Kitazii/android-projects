@@ -111,13 +111,13 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.ViewHo
     }
 
     /**
-     * Format exchange rate using European number format (comma as decimal separator)
-     * Examples: 1,24 | 157,8 | 4718,5
+     * Format exchange rate using UK/US number format (period as decimal separator)
+     * Examples: 1.24 | 157.8 | 4718.5
      */
     private String formatRate(double rate) {
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.GERMAN);
-        symbols.setDecimalSeparator(',');
-        symbols.setGroupingSeparator('.');
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.UK);
+        symbols.setDecimalSeparator('.');
+        symbols.setGroupingSeparator(',');
 
         DecimalFormat df = new DecimalFormat("#,##0.##", symbols);
         return df.format(rate);
