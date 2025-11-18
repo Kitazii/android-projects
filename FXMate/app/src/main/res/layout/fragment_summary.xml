@@ -33,14 +33,29 @@
         android:orientation="vertical"
         android:layout_marginBottom="16dp">
 
-        <TextView
-            android:id="@+id/usdCode"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="USD"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#000000" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/usdFlag"
+                android:layout_width="48dp"
+                android:layout_height="32dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="USD flag"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/usdCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="USD"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/usdName"
@@ -71,14 +86,29 @@
         android:orientation="vertical"
         android:layout_marginBottom="16dp">
 
-        <TextView
-            android:id="@+id/eurCode"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="EUR"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#000000" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/eurFlag"
+                android:layout_width="48dp"
+                android:layout_height="32dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="EUR flag"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/eurCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EUR"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/eurName"
@@ -109,14 +139,29 @@
         android:orientation="vertical"
         android:layout_marginBottom="16dp">
 
-        <TextView
-            android:id="@+id/jpyCode"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="JPY"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#000000" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/jpyFlag"
+                android:layout_width="48dp"
+                android:layout_height="32dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="JPY flag"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/jpyCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="JPY"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/jpyName"

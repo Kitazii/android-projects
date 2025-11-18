@@ -154,43 +154,134 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.ViewHo
 
     /**
      * Set flag icon based on currency code
-     * This is a placeholder implementation using Android drawable resources
-     * In a production app, you would use actual flag image resources
+     * Maps currency codes to their corresponding country flag images
      */
     private void setFlagIcon(ImageView imageView, String currencyCode) {
-        // Placeholder implementation - using default icon
-        // In production, you would map currency codes to flag drawable resources
-        // Example: if (currencyCode.equals("USD")) imageView.setImageResource(R.drawable.flag_usd);
-
-        // For now, use a simple colored circle to represent different currencies
         int iconResource = getFlagResourceForCurrency(currencyCode);
         imageView.setImageResource(iconResource);
     }
 
     /**
      * Get flag icon resource for currency code
-     * Placeholder implementation using Android system icons
+     * Maps 3-letter currency codes (ISO 4217) to 2-letter country codes (ISO 3166-1)
+     * Returns actual flag drawable resources
      */
     private int getFlagResourceForCurrency(String currencyCode) {
-        // Placeholder - in production, map to actual flag images
-        // For now, using system icons as placeholders
+        // Map currency codes to country codes and get flag resource
+        String countryCode = getCurrencyToCountryCode(currencyCode);
+
+        // Build resource name: flag_{countrycode}
+        String resourceName = "flag_" + countryCode;
+
+        // Get resource ID dynamically
+        int resourceId = context.getResources().getIdentifier(
+            resourceName,
+            "drawable",
+            context.getPackageName()
+        );
+
+        // Return flag resource or fallback to a default icon if not found
+        if (resourceId != 0) {
+            return resourceId;
+        } else {
+            // Fallback for currencies without flags
+            return android.R.drawable.ic_menu_mapmode;
+        }
+    }
+
+    /**
+     * Map currency codes (ISO 4217) to country codes (ISO 3166-1 alpha-2)
+     * Comprehensive mapping for major world currencies
+     */
+    private String getCurrencyToCountryCode(String currencyCode) {
         switch (currencyCode) {
-            case "USD":
-            case "CAD":
-            case "AUD":
-            case "NZD":
-                return android.R.drawable.ic_menu_compass;
-            case "EUR":
-                return android.R.drawable.ic_menu_info_details;
-            case "JPY":
-            case "CNY":
-            case "KRW":
-                return android.R.drawable.ic_menu_gallery;
-            case "CHF":
-            case "SEK":
-                return android.R.drawable.ic_menu_agenda;
+            // Major currencies
+            case "USD": return "us";    // United States Dollar
+            case "EUR": return "eu";    // Euro
+            case "GBP": return "gb";    // British Pound
+            case "JPY": return "jp";    // Japanese Yen
+            case "CHF": return "ch";    // Swiss Franc
+
+            // Americas
+            case "CAD": return "ca";    // Canadian Dollar
+            case "MXN": return "mx";    // Mexican Peso
+            case "BRL": return "br";    // Brazilian Real
+            case "ARS": return "ar";    // Argentine Peso
+            case "CLP": return "cl";    // Chilean Peso
+            case "COP": return "co";    // Colombian Peso
+            case "PEN": return "pe";    // Peruvian Sol
+            case "VEF": return "ve";    // Venezuelan Bolívar
+            case "BOB": return "bo";    // Bolivian Boliviano
+            case "UYU": return "uy";    // Uruguayan Peso
+
+            // Europe
+            case "NOK": return "no";    // Norwegian Krone
+            case "SEK": return "se";    // Swedish Krona
+            case "DKK": return "dk";    // Danish Krone
+            case "ISK": return "is";    // Icelandic Króna
+            case "CZK": return "cz";    // Czech Koruna
+            case "PLN": return "pl";    // Polish Złoty
+            case "HUF": return "hu";    // Hungarian Forint
+            case "RON": return "ro";    // Romanian Leu
+            case "BGN": return "bg";    // Bulgarian Lev
+            case "HRK": return "hr";    // Croatian Kuna
+            case "RSD": return "rs";    // Serbian Dinar
+            case "UAH": return "ua";    // Ukrainian Hryvnia
+            case "TRY": return "tr";    // Turkish Lira
+            case "RUB": return "ru";    // Russian Ruble
+
+            // Asia-Pacific
+            case "CNY": return "cn";    // Chinese Yuan
+            case "HKD": return "hk";    // Hong Kong Dollar
+            case "TWD": return "tw";    // Taiwan Dollar
+            case "KRW": return "kr";    // South Korean Won
+            case "INR": return "in";    // Indian Rupee
+            case "PKR": return "pk";    // Pakistani Rupee
+            case "BDT": return "bd";    // Bangladeshi Taka
+            case "LKR": return "lk";    // Sri Lankan Rupee
+            case "NPR": return "np";    // Nepalese Rupee
+            case "IDR": return "id";    // Indonesian Rupiah
+            case "MYR": return "my";    // Malaysian Ringgit
+            case "SGD": return "sg";    // Singapore Dollar
+            case "THB": return "th";    // Thai Baht
+            case "VND": return "vn";    // Vietnamese Dong
+            case "PHP": return "ph";    // Philippine Peso
+            case "AUD": return "au";    // Australian Dollar
+            case "NZD": return "nz";    // New Zealand Dollar
+
+            // Middle East
+            case "SAR": return "sa";    // Saudi Riyal
+            case "AED": return "ae";    // UAE Dirham
+            case "QAR": return "qa";    // Qatari Riyal
+            case "KWD": return "kw";    // Kuwaiti Dinar
+            case "BHD": return "bh";    // Bahraini Dinar
+            case "OMR": return "om";    // Omani Rial
+            case "JOD": return "jo";    // Jordanian Dinar
+            case "ILS": return "il";    // Israeli Shekel
+            case "IQD": return "iq";    // Iraqi Dinar
+            case "IRR": return "ir";    // Iranian Rial
+
+            // Africa
+            case "ZAR": return "za";    // South African Rand
+            case "EGP": return "eg";    // Egyptian Pound
+            case "NGN": return "ng";    // Nigerian Naira
+            case "KES": return "ke";    // Kenyan Shilling
+            case "TZS": return "tz";    // Tanzanian Shilling
+            case "UGX": return "ug";    // Ugandan Shilling
+            case "GHS": return "gh";    // Ghanaian Cedi
+            case "MAD": return "ma";    // Moroccan Dirham
+            case "TND": return "tn";    // Tunisian Dinar
+            case "DZD": return "dz";    // Algerian Dinar
+            case "AOA": return "ao";    // Angolan Kwanza
+            case "ETB": return "et";    // Ethiopian Birr
+
+            // Default: use first 2 characters of currency code as country code
+            // This works for many currencies (e.g., MXN->mx, CZK->cz, etc.)
             default:
-                return android.R.drawable.ic_menu_mapmode;
+                if (currencyCode != null && currencyCode.length() >= 2) {
+                    return currencyCode.substring(0, 2).toLowerCase();
+                }
+                return "xx";  // Fallback to unknown country
         }
     }
 }
