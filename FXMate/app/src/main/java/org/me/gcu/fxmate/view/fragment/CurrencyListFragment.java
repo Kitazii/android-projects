@@ -51,8 +51,7 @@ public class CurrencyListFragment extends Fragment {
     private ProgressBar loadingSpinner;
     private TextView statusTextView;
 
-    // Data
-    private List<CurrencyRate> allRates = new ArrayList<>();
+    // Data - allRates is now managed by ViewModel
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -138,7 +137,6 @@ public class CurrencyListFragment extends Fragment {
 
             if (currencyRates != null && !currencyRates.isEmpty()) {
                 Log.d(TAG, "Received " + currencyRates.size() + " currency rates");
-                allRates = currencyRates;
 
                 // Safely update adapter and UI
                 if (adapter != null) {
@@ -217,43 +215,18 @@ public class CurrencyListFragment extends Fragment {
 
     /**
      * Filter currencies based on search query
-     * Searches in: target currency name, target currency code, base currency name, base currency code
+     * Delegates to ViewModel for filtering logic
      */
     private void filterCurrencies(String query) {
-        // Safety check
-        if (adapter == null || allRates == null) {
-            Log.w(TAG, "Cannot filter: adapter or allRates is null");
+        if (adapter == null) {
+            Log.w(TAG, "Cannot filter: adapter is null");
             return;
         }
 
-        if (query == null || query.trim().isEmpty()) {
-            // Show all currencies
-            adapter.updateData(allRates);
-            return;
+        // Use ViewModel's searchCurrencies method to filter
+        List<CurrencyRate> filtered = viewModel.searchCurrencies(query);
+        if (filtered != null) {
+            adapter.updateData(filtered);
         }
-
-        String lowerQuery = query.toLowerCase().trim();
-        List<CurrencyRate> filtered = new ArrayList<>();
-
-        for (CurrencyRate rate : allRates) {
-            if (rate == null) continue;
-
-            // Null-safe string checks
-            String targetCurrency = rate.getTargetCurrency();
-            String targetCode = rate.getTargetCode();
-            String baseCurrency = rate.getBaseCurrency();
-            String baseCode = rate.getBaseCode();
-
-            // Search in target currency name and code
-            if ((targetCurrency != null && targetCurrency.toLowerCase().contains(lowerQuery)) ||
-                (targetCode != null && targetCode.toLowerCase().contains(lowerQuery)) ||
-                (baseCurrency != null && baseCurrency.toLowerCase().contains(lowerQuery)) ||
-                (baseCode != null && baseCode.toLowerCase().contains(lowerQuery))) {
-                filtered.add(rate);
-            }
-        }
-
-        Log.d(TAG, "Search query '" + query + "' returned " + filtered.size() + " results");
-        adapter.updateData(filtered);
     }
 }

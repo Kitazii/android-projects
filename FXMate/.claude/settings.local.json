@@ -4,7 +4,10 @@
       "Bash(del \"C:\\Users\\mrkie\\AndroidStudioProjects\\FXMate\\app\\src\\main\\java\\org\\me\\gcu\\fxmate\\view\\CurrencyListFragment.java\")",
       "Bash(cat:*)",
       "Bash(dir:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(powershell:*)",
+      "Bash(gradlew.bat assembleRelease:*)",
+      "Bash(nul)"
     ],
     "deny": [],
     "ask": []

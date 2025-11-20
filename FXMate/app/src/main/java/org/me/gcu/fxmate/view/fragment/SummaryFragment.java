@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.me.gcu.fxmate.R;
 import org.me.gcu.fxmate.model.CurrencyRate;
+import org.me.gcu.fxmate.utils.CurrencyUtils;
 import org.me.gcu.fxmate.viewmodel.CurrencyViewModel;
 
 import java.text.SimpleDateFormat;
@@ -194,31 +195,30 @@ public class SummaryFragment extends Fragment {
         }
 
         // Populate USD
-        if (usdCurrency != null) {
-            setFlagIcon(usdFlag, usdCurrency.getTargetCode());
+        if (usdCurrency != null && getContext() != null) {
+            CurrencyUtils.setFlagIcon(getContext(), usdFlag, usdCurrency.getTargetCode());
             usdName.setText(usdCurrency.getTargetCurrency());
             usdRate.setText(String.format("1 GBP = %s %s",
-                formatRate(usdCurrency.getRate()), usdCurrency.getTargetCode()));
-            // Set color based on strength
-            usdRate.setBackgroundColor(getColorForRate(usdCurrency.getRate()));
+                CurrencyUtils.formatRateSummary(usdCurrency.getRate()), usdCurrency.getTargetCode()));
+            usdRate.setBackgroundColor(CurrencyUtils.getColorForRate(getContext(), usdCurrency.getRate()));
         }
 
         // Populate EUR
-        if (eurCurrency != null) {
-            setFlagIcon(eurFlag, eurCurrency.getTargetCode());
+        if (eurCurrency != null && getContext() != null) {
+            CurrencyUtils.setFlagIcon(getContext(), eurFlag, eurCurrency.getTargetCode());
             eurName.setText(eurCurrency.getTargetCurrency());
             eurRate.setText(String.format("1 GBP = %s %s",
-                formatRate(eurCurrency.getRate()), eurCurrency.getTargetCode()));
-            eurRate.setBackgroundColor(getColorForRate(eurCurrency.getRate()));
+                CurrencyUtils.formatRateSummary(eurCurrency.getRate()), eurCurrency.getTargetCode()));
+            eurRate.setBackgroundColor(CurrencyUtils.getColorForRate(getContext(), eurCurrency.getRate()));
         }
 
         // Populate JPY
-        if (jpyCurrency != null) {
-            setFlagIcon(jpyFlag, jpyCurrency.getTargetCode());
+        if (jpyCurrency != null && getContext() != null) {
+            CurrencyUtils.setFlagIcon(getContext(), jpyFlag, jpyCurrency.getTargetCode());
             jpyName.setText(jpyCurrency.getTargetCurrency());
             jpyRate.setText(String.format("1 GBP = %s %s",
-                formatRate(jpyCurrency.getRate()), jpyCurrency.getTargetCode()));
-            jpyRate.setBackgroundColor(getColorForRate(jpyCurrency.getRate()));
+                CurrencyUtils.formatRateSummary(jpyCurrency.getRate()), jpyCurrency.getTargetCode()));
+            jpyRate.setBackgroundColor(CurrencyUtils.getColorForRate(getContext(), jpyCurrency.getRate()));
         }
     }
 
@@ -229,107 +229,5 @@ public class SummaryFragment extends Fragment {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm, dd MMM yyyy", Locale.getDefault());
         String timestamp = dateFormat.format(new Date());
         updatedTimestamp.setText("Updated: " + timestamp);
-    }
-
-    /**
-     * Format rate with appropriate decimal places using period as decimal separator
-     */
-    private String formatRate(double rate) {
-        if (rate >= 100) {
-            return String.format("%.1f", rate);
-        } else {
-            return String.format("%.2f", rate);
-        }
-    }
-
-    /**
-     * Get color for currency rate based on strength
-     * Higher rate = weaker target currency (more units needed per GBP) = red
-     * Lower rate = stronger target currency (fewer units needed per GBP) = green
-     * Matches the color coding from CurrencyAdapter
-     */
-    private int getColorForRate(double rate) {
-        if (rate >= 100) {
-            // Very High - Dark Red/Pink (very weak currency)
-            return getResources().getColor(R.color.rate_very_high, null);
-        } else if (rate >= 10) {
-            // High - Light Red/Pink (weak currency)
-            return getResources().getColor(R.color.rate_high, null);
-        } else if (rate >= 2) {
-            // Medium - Light Yellow
-            return getResources().getColor(R.color.rate_medium, null);
-        } else if (rate >= 1) {
-            // Low - Light Green (strong currency)
-            return getResources().getColor(R.color.rate_low, null);
-        } else {
-            // Very Low - Dark Green (very strong currency)
-            return getResources().getColor(R.color.rate_very_low, null);
-        }
-    }
-
-    /**
-     * Set flag icon based on currency code
-     * Maps currency codes to their corresponding country flag images
-     */
-    private void setFlagIcon(android.widget.ImageView imageView, String currencyCode) {
-        if (getContext() == null || imageView == null) return;
-
-        int iconResource = getFlagResourceForCurrency(currencyCode);
-        imageView.setImageResource(iconResource);
-    }
-
-    /**
-     * Get flag icon resource for currency code
-     * Maps 3-letter currency codes (ISO 4217) to 2-letter country codes (ISO 3166-1)
-     * Returns actual flag drawable resources
-     */
-    private int getFlagResourceForCurrency(String currencyCode) {
-        if (getContext() == null) return android.R.drawable.ic_menu_mapmode;
-
-        // Map currency codes to country codes and get flag resource
-        String countryCode = getCurrencyToCountryCode(currencyCode);
-
-        // Build resource name: flag_{countrycode}
-        String resourceName = "flag_" + countryCode;
-
-        // Get resource ID dynamically
-        int resourceId = getContext().getResources().getIdentifier(
-            resourceName,
-            "drawable",
-            getContext().getPackageName()
-        );
-
-        // Return flag resource or fallback to a default icon if not found
-        if (resourceId != 0) {
-            return resourceId;
-        } else {
-            // Fallback for currencies without flags
-            return android.R.drawable.ic_menu_mapmode;
-        }
-    }
-
-    /**
-     * Map currency codes (ISO 4217) to country codes (ISO 3166-1 alpha-2)
-     * Simplified version for main currencies
-     */
-    private String getCurrencyToCountryCode(String currencyCode) {
-        switch (currencyCode) {
-            // Main currencies
-            case "USD": return "us";    // United States Dollar
-            case "EUR": return "eu";    // Euro
-            case "JPY": return "jp";    // Japanese Yen
-            case "GBP": return "gb";    // British Pound
-            case "CHF": return "ch";    // Swiss Franc
-            case "CAD": return "ca";    // Canadian Dollar
-            case "AUD": return "au";    // Australian Dollar
-            case "NZD": return "nz";    // New Zealand Dollar
-
-            // Default: use first 2 characters of currency code as country code
-            default:
-                if (currencyCode != null && currencyCode.length() >= 2) {
-                    return currencyCode.substring(0, 2).toLowerCase();
-                }
-                return "xx";  // Fallback to unknown country
-        }
     }
 }
