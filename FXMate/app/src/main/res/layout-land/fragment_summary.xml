@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- Header Row: Title + Timestamp -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/summaryTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Currency Summary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/updatedTimestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Updated: --:--"
+            android:textSize="11sp"
+            android:textColor="#666666"
+            android:layout_marginStart="12dp" />
+    </LinearLayout>
+
+    <!-- Currency Cards Row: USD | EUR | JPY side by side -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <!-- USD Card -->
+        <LinearLayout
+            android:id="@+id/usdCard"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_marginEnd="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="2dp">
+
+                <ImageView
+                    android:id="@+id/usdFlag"
+                    android:layout_width="32dp"
+                    android:layout_height="22dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="USD flag"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/usdCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="USD"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/usdName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="United States Dollar"
+                android:textSize="11sp"
+                android:textColor="#666666"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/usdRate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1 GBP = 1,26 USD"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:background="#FFB6B6"
+                android:padding="8dp"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <!-- EUR Card -->
+        <LinearLayout
+            android:id="@+id/eurCard"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_marginHorizontal="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="2dp">
+
+                <ImageView
+                    android:id="@+id/eurFlag"
+                    android:layout_width="32dp"
+                    android:layout_height="22dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="EUR flag"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/eurCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="EUR"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/eurName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Euro"
+                android:textSize="11sp"
+                android:textColor="#666666"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/eurRate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1 GBP = 1,17 EUR"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:background="#FFE082"
+                android:padding="8dp"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <!-- JPY Card -->
+        <LinearLayout
+            android:id="@+id/jpyCard"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_marginStart="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="2dp">
+
+                <ImageView
+                    android:id="@+id/jpyFlag"
+                    android:layout_width="32dp"
+                    android:layout_height="22dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="JPY flag"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/jpyCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="JPY"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/jpyName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Japanese Yen"
+                android:textSize="11sp"
+                android:textColor="#666666"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/jpyRate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1 GBP = 148,9 JPY"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:background="#A5D6A7"
+                android:padding="8dp"
+                android:gravity="center" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Show All Currencies Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/showAllButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show All Currencies"
+        android:textAllCaps="false"
+        android:layout_marginTop="8dp"
+        style="@style/Widget.Material3.Button" />
+
+    <!-- Loading Spinner -->
+    <ProgressBar
+        android:id="@+id/loadingSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <!-- Status TextView for messages -->
+    <TextView
+        android:id="@+id/statusTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:text="Loading..."
+        android:visibility="gone" />
+
+</LinearLayout>

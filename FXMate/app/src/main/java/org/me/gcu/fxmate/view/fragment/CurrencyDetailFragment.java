@@ -48,7 +48,6 @@ public class CurrencyDetailFragment extends Fragment {
     private EditText bottomAmountEditText;
     private TextView bottomCurrencyCodeTextView;
     private View colorIndicatorBar;
-    private Button viewOnMapButton;
 
     // Data
     private CurrencyRate currencyRate;
@@ -99,13 +98,12 @@ public class CurrencyDetailFragment extends Fragment {
         bottomAmountEditText = view.findViewById(R.id.bottomAmountEditText);
         bottomCurrencyCodeTextView = view.findViewById(R.id.bottomCurrencyCodeTextView);
         colorIndicatorBar = view.findViewById(R.id.colorIndicatorBar);
-        viewOnMapButton = view.findViewById(R.id.viewOnMapButton);
 
         // Setup back button
         backButton.setOnClickListener(v -> {
             // Navigate back to currency list
             if (getActivity() != null) {
-                getActivity().onBackPressed();
+                getActivity().getOnBackPressedDispatcher().onBackPressed();
             }
         });
 
@@ -117,12 +115,6 @@ public class CurrencyDetailFragment extends Fragment {
 
         // Setup swap button
         swapButton.setOnClickListener(v -> swapCurrencies());
-
-        // Placeholder for "View on map" button
-        viewOnMapButton.setOnClickListener(v -> {
-            // TODO: Implement map view functionality
-            Log.d(TAG, "View on map clicked for " + currencyRate.getTargetCode());
-        });
 
         Log.d(TAG, "CurrencyDetailFragment view created");
         return view;

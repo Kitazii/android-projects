@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ public class CurrencyListFragment extends Fragment {
     private RecyclerView recyclerView;
     private CurrencyAdapter adapter;
     private EditText searchEditText;
+    private ImageButton backButton;
     private ProgressBar loadingSpinner;
     private TextView statusTextView;
 
@@ -82,8 +84,16 @@ public class CurrencyListFragment extends Fragment {
         // Initialize UI components
         recyclerView = view.findViewById(R.id.currencyRecyclerView);
         searchEditText = view.findViewById(R.id.searchEditText);
+        backButton = view.findViewById(R.id.backButton);
         loadingSpinner = view.findViewById(R.id.loadingSpinner);
         statusTextView = view.findViewById(R.id.statusTextView);
+
+        // Set up back button to navigate back to summary
+        backButton.setOnClickListener(v -> {
+            if (getActivity() != null) {
+                getActivity().getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         // Set up RecyclerView with LinearLayoutManager (MPD_03a1 pattern)
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

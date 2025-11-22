@@ -35,6 +35,7 @@ public class SummaryFragment extends Fragment {
     // Interface for communication with MainActivity
     public interface SummaryListener {
         void onShowAllCurrencies();
+        void onCurrencySelected(CurrencyRate selectedRate);
     }
 
     private SummaryListener listener;
@@ -46,9 +47,13 @@ public class SummaryFragment extends Fragment {
     private TextView usdName, usdRate;
     private TextView eurName, eurRate;
     private TextView jpyName, jpyRate;
+    private android.widget.LinearLayout usdCard, eurCard, jpyCard;
     private com.google.android.material.button.MaterialButton showAllButton;
     private ProgressBar loadingSpinner;
     private TextView statusTextView;
+
+    // Stored currency rate objects for click handling
+    private CurrencyRate storedUsdRate, storedEurRate, storedJpyRate;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -87,6 +92,9 @@ public class SummaryFragment extends Fragment {
         jpyFlag = view.findViewById(R.id.jpyFlag);
         jpyName = view.findViewById(R.id.jpyName);
         jpyRate = view.findViewById(R.id.jpyRate);
+        usdCard = view.findViewById(R.id.usdCard);
+        eurCard = view.findViewById(R.id.eurCard);
+        jpyCard = view.findViewById(R.id.jpyCard);
         showAllButton = view.findViewById(R.id.showAllButton);
         loadingSpinner = view.findViewById(R.id.loadingSpinner);
         statusTextView = view.findViewById(R.id.statusTextView);
@@ -95,6 +103,25 @@ public class SummaryFragment extends Fragment {
         showAllButton.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onShowAllCurrencies();
+            }
+        });
+
+        // Set up currency card click listeners
+        usdCard.setOnClickListener(v -> {
+            if (listener != null && storedUsdRate != null) {
+                listener.onCurrencySelected(storedUsdRate);
+            }
+        });
+
+        eurCard.setOnClickListener(v -> {
+            if (listener != null && storedEurRate != null) {
+                listener.onCurrencySelected(storedEurRate);
+            }
+        });
+
+        jpyCard.setOnClickListener(v -> {
+            if (listener != null && storedJpyRate != null) {
+                listener.onCurrencySelected(storedJpyRate);
             }
         });
 
@@ -184,41 +211,43 @@ public class SummaryFragment extends Fragment {
      * Populate the summary view with main currency data
      */
     private void populateSummaryView(List<CurrencyRate> mainCurrencies) {
-        // Find each currency
-        CurrencyRate usdCurrency = null, eurCurrency = null, jpyCurrency = null;
+        // Find each currency and store references for click handling
+        storedUsdRate = null;
+        storedEurRate = null;
+        storedJpyRate = null;
 
         for (CurrencyRate rate : mainCurrencies) {
             String code = rate.getTargetCode();
-            if ("USD".equals(code)) usdCurrency = rate;
-            else if ("EUR".equals(code)) eurCurrency = rate;
-            else if ("JPY".equals(code)) jpyCurrency = rate;
+            if ("USD".equals(code)) storedUsdRate = rate;
+            else if ("EUR".equals(code)) storedEurRate = rate;
+            else if ("JPY".equals(code)) storedJpyRate = rate;
         }
 
         // Populate USD
-        if (usdCurrency != null && getContext() != null) {
-            CurrencyUtils.setFlagIcon(getContext(), usdFlag, usdCurrency.getTargetCode());
-            usdName.setText(usdCurrency.getTargetCurrency());
+        if (storedUsdRate != null && getContext() != null) {
+            CurrencyUtils.setFlagIcon(getContext(), usdFlag, storedUsdRate.getTargetCode());
+            usdName.setText(storedUsdRate.getTargetCurrency());
             usdRate.setText(String.format("1 GBP = %s %s",
-                CurrencyUtils.formatRateSummary(usdCurrency.getRate()), usdCurrency.getTargetCode()));
-            usdRate.setBackgroundColor(CurrencyUtils.getColorForRate(getContext(), usdCurrency.getRate()));
+                CurrencyUtils.formatRateSummary(storedUsdRate.getRate()), storedUsdRate.getTargetCode()));
+            usdRate.setBackgroundColor(CurrencyUtils.getColorForRate(getContext(), storedUsdRate.getRate()));
         }
 
         // Populate EUR
-        if (eurCurrency != null && getContext() != null) {
-            CurrencyUtils.setFlagIcon(getContext(), eurFlag, eurCurrency.getTargetCode());
-            eurName.setText(eurCurrency.getTargetCurrency());
+        if (storedEurRate != null && getContext() != null) {
+            CurrencyUtils.setFlagIcon(getContext(), eurFlag, storedEurRate.getTargetCode());
+            eurName.setText(storedEurRate.getTargetCurrency());
             eurRate.setText(String.format("1 GBP = %s %s",
-                CurrencyUtils.formatRateSummary(eurCurrency.getRate()), eurCurrency.getTargetCode()));
-            eurRate.setBackgroundColor(CurrencyUtils.getColorForRate(getContext(), eurCurrency.getRate()));
+                CurrencyUtils.formatRateSummary(storedEurRate.getRate()), storedEurRate.getTargetCode()));
+            eurRate.setBackgroundColor(CurrencyUtils.getColorForRate(getContext(), storedEurRate.getRate()));
         }
 
         // Populate JPY
-        if (jpyCurrency != null && getContext() != null) {
-            CurrencyUtils.setFlagIcon(getContext(), jpyFlag, jpyCurrency.getTargetCode());
-            jpyName.setText(jpyCurrency.getTargetCurrency());
+        if (storedJpyRate != null && getContext() != null) {
+            CurrencyUtils.setFlagIcon(getContext(), jpyFlag, storedJpyRate.getTargetCode());
+            jpyName.setText(storedJpyRate.getTargetCurrency());
             jpyRate.setText(String.format("1 GBP = %s %s",
-                CurrencyUtils.formatRateSummary(jpyCurrency.getRate()), jpyCurrency.getTargetCode()));
-            jpyRate.setBackgroundColor(CurrencyUtils.getColorForRate(getContext(), jpyCurrency.getRate()));
+                CurrencyUtils.formatRateSummary(storedJpyRate.getRate()), storedJpyRate.getTargetCode()));
+            jpyRate.setBackgroundColor(CurrencyUtils.getColorForRate(getContext(), storedJpyRate.getRate()));
         }
     }
 
