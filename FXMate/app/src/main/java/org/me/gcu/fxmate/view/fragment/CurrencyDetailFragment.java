@@ -21,11 +21,8 @@ import androidx.lifecycle.ViewModelProvider;
 import org.me.gcu.fxmate.R;
 import org.me.gcu.fxmate.model.CurrencyRate;
 import org.me.gcu.fxmate.utils.CurrencyUtils;
+import org.me.gcu.fxmate.utils.DateUtils;
 import org.me.gcu.fxmate.viewmodel.CurrencyDetailViewModel;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Fragment displaying currency conversion calculator
@@ -137,9 +134,8 @@ public class CurrencyDetailFragment extends Fragment {
         String formattedRate = CurrencyUtils.formatRateDetailed(currencyRate.getRate());
         exchangeRateTextView.setText(formattedRate);
 
-        // Display timestamp
-        String timestamp = "As of " + getCurrentTimestamp();
-        timestampTextView.setText(timestamp);
+        // Display timestamp using DateUtils for consistent formatting
+        timestampTextView.setText(DateUtils.formatDetailTimestamp());
 
         // Set initial currency codes
         updateCurrencyLabels();
@@ -240,13 +236,5 @@ public class CurrencyDetailFragment extends Fragment {
         isUpdating = false;
 
         Log.d(TAG, "Currencies swapped. isSwapped: " + viewModel.isSwapped());
-    }
-
-    /**
-     * Get current timestamp formatted as "dd/MM/yyyy HH:mm"
-     */
-    private String getCurrentTimestamp() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.UK);
-        return sdf.format(new Date());
     }
 }

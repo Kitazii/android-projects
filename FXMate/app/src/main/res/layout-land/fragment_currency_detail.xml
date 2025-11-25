@@ -17,6 +17,7 @@
             android:layout_height="48dp"
             android:src="@drawable/ic_back_arrow"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="@color/button_primary"
             android:contentDescription="Go back"
             android:layout_marginBottom="16dp" />
 
@@ -111,6 +112,7 @@
             android:layout_gravity="center"
             android:src="@android:drawable/ic_menu_revert"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="@color/button_primary"
             android:contentDescription="Swap currencies"
             android:layout_marginVertical="4dp" />
 

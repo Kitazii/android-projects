@@ -3,6 +3,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!-- Button Theme Colors - Darker Blue Palette -->
+    <color name="button_primary">#1565C0</color>           <!-- Dark Blue - Main button color -->
+    <color name="button_primary_dark">#0D47A1</color>      <!-- Darker Blue - Pressed state -->
+    <color name="button_secondary">#1976D2</color>         <!-- Medium Blue - Secondary buttons -->
+    <color name="button_on_primary">#FFFFFF</color>        <!-- White - Text color on buttons -->
+    <color name="button_ripple">#64B5F6</color>            <!-- Light Blue - Ripple effect -->
+
     <!-- Currency Rate Color Coding (List Background) -->
     <color name="rate_very_high">#FFCCCC</color>      <!-- Dark Red/Pink for rate >= 100 -->
     <color name="rate_high">#FFE0E0</color>           <!-- Light Red/Pink for rate >= 10 -->

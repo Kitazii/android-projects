@@ -1,5 +1,7 @@
 package org.me.gcu.fxmate.viewmodel;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -8,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 
 import org.me.gcu.fxmate.model.CurrencyRate;
 import org.me.gcu.fxmate.repository.CurrencyRepository;
+import org.me.gcu.fxmate.utils.DateUtils;
 
 import java.util.List;
 
@@ -15,19 +18,44 @@ public class CurrencyViewModel extends ViewModel {
 
     private static final String TAG = "CurrencyViewModel";
 
+    // Auto-update configuration
+    // Default: 1 hour (3600000 ms) - can be reduced for demo purposes
+    // For demo: use 5 minutes (300000 ms) or even 1 minute (60000 ms)
+    private static final long AUTO_UPDATE_INTERVAL_MS = 300000; // 5 minutes for demo
+
     private final CurrencyRepository repository;
     private final MutableLiveData<List<CurrencyRate>> currencyRates;
     private final MutableLiveData<Boolean> isLoading;
     private final MutableLiveData<String> errorMessage;
+    private final MutableLiveData<String> lastUpdateTime;
 
     // Guard flag to prevent multiple simultaneous fetches
     private boolean isFetching = false;
+
+    // Handler for periodic updates
+    private final Handler autoUpdateHandler;
+    private boolean autoUpdateEnabled = false;
+
+    // Runnable for periodic updates
+    private final Runnable autoUpdateRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (autoUpdateEnabled) {
+                Log.d(TAG, "Auto-update triggered (interval: " + (AUTO_UPDATE_INTERVAL_MS / 1000) + "s)");
+                refreshCurrencyData();
+                // Schedule next update
+                autoUpdateHandler.postDelayed(this, AUTO_UPDATE_INTERVAL_MS);
+            }
+        }
+    };
 
     public CurrencyViewModel() {
         repository = CurrencyRepository.getInstance();
         currencyRates = new MutableLiveData<>();
         isLoading = new MutableLiveData<>();
         errorMessage = new MutableLiveData<>();
+        lastUpdateTime = new MutableLiveData<>();
+        autoUpdateHandler = new Handler(Looper.getMainLooper());
     }
 
     public LiveData<List<CurrencyRate>> getCurrencyRates() {
@@ -42,10 +70,17 @@ public class CurrencyViewModel extends ViewModel {
         return errorMessage;
     }
 
+    public LiveData<String> getLastUpdateTime() {
+        return lastUpdateTime;
+    }
+
     /**
      * Fetches currency data from RSS feed using background thread
      * This method uses the Repository's Handler pattern implementation
      * The callback will be invoked on the main thread, making it safe to update LiveData
+     *
+     * Note: Always fetches fresh data to ensure exchange rates are current.
+     * The isFetching guard prevents duplicate simultaneous fetches.
      */
     public void fetchCurrencyData() {
         // Guard: prevent multiple simultaneous fetches
@@ -54,12 +89,28 @@ public class CurrencyViewModel extends ViewModel {
             return;
         }
 
-        // Also skip if we already have data
-        if (currencyRates.getValue() != null && !currencyRates.getValue().isEmpty()) {
-            Log.d(TAG, "Data already loaded (" + currencyRates.getValue().size() + " rates), skipping fetch");
+        performFetch();
+    }
+
+    /**
+     * Refreshes currency data from RSS feed (forces update even if data exists)
+     * This method is used for periodic auto-updates and manual refresh
+     */
+    public void refreshCurrencyData() {
+        // Guard: prevent multiple simultaneous fetches
+        if (isFetching) {
+            Log.w(TAG, "Fetch already in progress, ignoring duplicate refresh request");
             return;
         }
 
+        Log.d(TAG, "Refreshing currency data...");
+        performFetch();
+    }
+
+    /**
+     * Internal method to perform the actual fetch operation
+     */
+    private void performFetch() {
         isFetching = true;
         isLoading.setValue(true);
         errorMessage.setValue(null);
@@ -75,6 +126,9 @@ public class CurrencyViewModel extends ViewModel {
                 currencyRates.setValue(rates);
                 isLoading.setValue(false);
                 isFetching = false;
+
+                // Update last update time
+                updateLastUpdateTime();
             }
 
             @Override
@@ -86,6 +140,15 @@ public class CurrencyViewModel extends ViewModel {
                 isFetching = false;
             }
         });
+    }
+
+    /**
+     * Updates the last update timestamp using DateUtils for consistent formatting
+     */
+    private void updateLastUpdateTime() {
+        String currentTime = DateUtils.formatLastUpdateTime();
+        lastUpdateTime.setValue(currentTime);
+        Log.d(TAG, "Data updated at: " + currentTime);
     }
 
     /**
@@ -163,9 +226,49 @@ public class CurrencyViewModel extends ViewModel {
         return mainCurrencies;
     }
 
+    /**
+     * Starts automatic periodic updates of currency data
+     * Updates will occur at intervals defined by AUTO_UPDATE_INTERVAL_MS
+     */
+    public void startAutoUpdate() {
+        if (autoUpdateEnabled) {
+            Log.d(TAG, "Auto-update already enabled");
+            return;
+        }
+
+        autoUpdateEnabled = true;
+        Log.d(TAG, "Starting auto-update (interval: " + (AUTO_UPDATE_INTERVAL_MS / 1000) + " seconds)");
+
+        // Schedule first update
+        autoUpdateHandler.postDelayed(autoUpdateRunnable, AUTO_UPDATE_INTERVAL_MS);
+    }
+
+    /**
+     * Stops automatic periodic updates of currency data
+     */
+    public void stopAutoUpdate() {
+        if (!autoUpdateEnabled) {
+            Log.d(TAG, "Auto-update already disabled");
+            return;
+        }
+
+        autoUpdateEnabled = false;
+        autoUpdateHandler.removeCallbacks(autoUpdateRunnable);
+        Log.d(TAG, "Auto-update stopped");
+    }
+
+    /**
+     * Returns whether auto-update is currently enabled
+     */
+    public boolean isAutoUpdateEnabled() {
+        return autoUpdateEnabled;
+    }
+
     @Override
     protected void onCleared() {
         super.onCleared();
+        // Stop auto-updates when ViewModel is destroyed
+        stopAutoUpdate();
         Log.d(TAG, "ViewModel cleared");
     }
 }

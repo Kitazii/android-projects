@@ -64,66 +64,43 @@ public class CurrencyRepository {
         Log.d(TAG, "Starting background thread to fetch RSS feed...");
 
         // Create Thread to handle the long-running network operation
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG, "Worker thread started - fetching RSS feed from: " + RSS_FEED_URL);
+        new Thread(() -> {
+            Log.d(TAG, "Worker thread started - fetching RSS feed from: " + RSS_FEED_URL);
 
-                try {
-                    // Step 1: Fetch RSS feed from network (blocking I/O operation)
-                    RssFeedFetcher fetcher = new RssFeedFetcher();
-                    final String xmlData = fetcher.fetchRssFeed(RSS_FEED_URL);
+            try {
+                // Step 1: Fetch RSS feed from network (blocking I/O operation)
+                RssFeedFetcher fetcher = new RssFeedFetcher();
+                final String xmlData = fetcher.fetchRssFeed(RSS_FEED_URL);
 
-                    if (xmlData == null || xmlData.isEmpty()) {
-                        // Network error - post error to main thread
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                callback.onError("Failed to download RSS feed");
-                            }
-                        });
-                        return;
-                    }
-
-                    Log.d(TAG, "RSS feed downloaded successfully, parsing XML...");
-
-                    // Step 2: Parse the XML data (still on worker thread)
-                    final List<CurrencyRate> rates = parser.parse(xmlData);
-
-                    if (rates == null || rates.isEmpty()) {
-                        // Parsing error - post error to main thread
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                callback.onError("Failed to parse currency data");
-                            }
-                        });
-                        return;
-                    }
-
-                    Log.d(TAG, "Parsing complete. Posting " + rates.size() + " rates to main thread...");
-
-                    // Step 3: Post results to main thread using Handler
-                    // This ensures UI updates happen on the main thread
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callback.onDataLoaded(rates);
-                        }
-                    });
-
-                } catch (Exception e) {
-                    Log.e(TAG, "Error in worker thread: " + e.getMessage(), e);
-
-                    // Post error to main thread
-                    final String errorMsg = e.getMessage();
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callback.onError("Error fetching data: " + errorMsg);
-                        }
-                    });
+                if (xmlData == null || xmlData.isEmpty()) {
+                    // Network error - post error to main thread
+                    mHandler.post(() -> callback.onError("Failed to download RSS feed"));
+                    return;
                 }
+
+                Log.d(TAG, "RSS feed downloaded successfully, parsing XML...");
+
+                // Step 2: Parse the XML data (still on worker thread)
+                final List<CurrencyRate> rates = parser.parse(xmlData);
+
+                if (rates == null || rates.isEmpty()) {
+                    // Parsing error - post error to main thread
+                    mHandler.post(() -> callback.onError("Failed to parse currency data"));
+                    return;
+                }
+
+                Log.d(TAG, "Parsing complete. Posting " + rates.size() + " rates to main thread...");
+
+                // Step 3: Post results to main thread using Handler
+                // This ensures UI updates happen on the main thread
+                mHandler.post(() -> callback.onDataLoaded(rates));
+
+            } catch (Exception e) {
+                Log.e(TAG, "Error in worker thread: " + e.getMessage(), e);
+
+                // Post error to main thread
+                final String errorMsg = e.getMessage();
+                mHandler.post(() -> callback.onError("Error fetching data: " + errorMsg));
             }
         }).start(); // Start the worker thread
     }

@@ -17,12 +17,10 @@ import androidx.lifecycle.ViewModelProvider;
 import org.me.gcu.fxmate.R;
 import org.me.gcu.fxmate.model.CurrencyRate;
 import org.me.gcu.fxmate.utils.CurrencyUtils;
+import org.me.gcu.fxmate.utils.DateUtils;
 import org.me.gcu.fxmate.viewmodel.CurrencyViewModel;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Fragment displaying summary of main currencies (USD, EUR, JPY)
@@ -253,10 +251,9 @@ public class SummaryFragment extends Fragment {
 
     /**
      * Update the timestamp with current time
+     * Uses DateUtils for consistent formatting across the app
      */
     private void updateTimestamp() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm, dd MMM yyyy", Locale.getDefault());
-        String timestamp = dateFormat.format(new Date());
-        updatedTimestamp.setText("Updated: " + timestamp);
+        updatedTimestamp.setText(DateUtils.formatSummaryTimestamp());
     }
 }

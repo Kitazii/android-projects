@@ -12,6 +12,7 @@
         android:layout_height="48dp"
         android:src="@drawable/ic_back_arrow"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:tint="@color/button_primary"
         android:contentDescription="Go back"
         android:layout_marginBottom="16dp" />
 
@@ -25,8 +26,20 @@
         android:drawablePadding="8dp"
         android:padding="12dp"
         android:background="@android:drawable/edit_text"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:inputType="text" />
+
+    <!-- Currency Count Display -->
+    <TextView
+        android:id="@+id/currencyCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 currencies listed"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:layout_marginBottom="12dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp" />
 
     <!-- RecyclerView for currency list -->
     <androidx.recyclerview.widget.RecyclerView

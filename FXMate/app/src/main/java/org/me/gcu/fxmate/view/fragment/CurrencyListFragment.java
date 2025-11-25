@@ -52,6 +52,7 @@ public class CurrencyListFragment extends Fragment {
     private ImageButton backButton;
     private ProgressBar loadingSpinner;
     private TextView statusTextView;
+    private TextView currencyCountTextView;
 
     // Data - allRates is now managed by ViewModel
 
@@ -87,6 +88,7 @@ public class CurrencyListFragment extends Fragment {
         backButton = view.findViewById(R.id.backButton);
         loadingSpinner = view.findViewById(R.id.loadingSpinner);
         statusTextView = view.findViewById(R.id.statusTextView);
+        currencyCountTextView = view.findViewById(R.id.currencyCountTextView);
 
         // Set up back button to navigate back to summary
         backButton.setOnClickListener(v -> {
@@ -152,6 +154,9 @@ public class CurrencyListFragment extends Fragment {
                 if (adapter != null) {
                     adapter.updateData(currencyRates);
                 }
+                // Update currency count display
+                updateCurrencyCount(currencyRates.size());
+
                 if (statusTextView != null) {
                     statusTextView.setVisibility(View.GONE);
                 }
@@ -237,6 +242,20 @@ public class CurrencyListFragment extends Fragment {
         List<CurrencyRate> filtered = viewModel.searchCurrencies(query);
         if (filtered != null) {
             adapter.updateData(filtered);
+            updateCurrencyCount(filtered.size());
+        }
+    }
+
+    /**
+     * Update the currency count display
+     * Handles singular/plural properly
+     */
+    private void updateCurrencyCount(int count) {
+        if (currencyCountTextView != null) {
+            String countText = count == 1 ?
+                count + " currency listed" :
+                count + " currencies listed";
+            currencyCountTextView.setText(countText);
         }
     }
 }

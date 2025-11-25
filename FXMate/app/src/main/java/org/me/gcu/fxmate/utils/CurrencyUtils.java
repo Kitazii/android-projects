@@ -1,5 +1,6 @@
 package org.me.gcu.fxmate.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
@@ -16,6 +17,15 @@ import java.util.Map;
 /**
  * Utility class for currency-related operations
  * Centralizes common functionality used across Views
+ *
+ * This class contains three types of utilities:
+ * 1. FORMATTING: Pure functions for formatting rates and amounts (formatRate, formatAmount)
+ * 2. COLOR CODING: Functions for determining colors based on exchange rates
+ * 3. VIEW HELPERS: Android-specific helpers for setting View properties (setFlagIcon, setColorIndicatorGradient)
+ * 4. CONVERSION: Pure mathematical currency conversion functions
+ *
+ * Note: View helper methods require Context and manipulate Views directly.
+ * This is a common Android pattern for reusable View configuration.
  */
 public final class CurrencyUtils {
 
@@ -254,7 +264,16 @@ public final class CurrencyUtils {
     /**
      * Get flag icon resource for currency code
      * Maps 3-letter currency codes (ISO 4217) to flag drawable resources
+     *
+     * NOTE: Uses getIdentifier() for dynamic resource lookup - this is intentional.
+     * With 260+ flag resources, dynamic lookup is more maintainable than hardcoded mappings.
+     * This is a legitimate use case for runtime resource resolution where reflection is appropriate.
+     *
+     * @param context Android context for resource access
+     * @param currencyCode 3-letter ISO 4217 currency code (e.g., "USD", "EUR")
+     * @return Resource ID of the flag drawable, or default icon if not found
      */
+    @SuppressLint("DiscouragedApi")  // Justified: Dynamic lookup for 260+ flags
     public static int getFlagResourceForCurrency(Context context, String currencyCode) {
         if (context == null) return android.R.drawable.ic_menu_mapmode;
 

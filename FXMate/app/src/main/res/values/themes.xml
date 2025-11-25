@@ -1,8 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.FXMate" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Darker Blue Theme for Buttons -->
+        <item name="colorPrimary">@color/button_primary</item>               <!-- Main button color -->
+        <item name="colorPrimaryVariant">@color/button_primary_dark</item>    <!-- Darker variant -->
+        <item name="colorSecondary">@color/button_secondary</item>            <!-- Secondary buttons -->
+        <item name="colorOnPrimary">@color/button_on_primary</item>           <!-- Text on buttons -->
+        <item name="colorControlHighlight">@color/button_ripple</item>        <!-- Ripple effect -->
     </style>
 
     <style name="Theme.FXMate" parent="Base.Theme.FXMate" />

@@ -33,14 +33,40 @@ public class MainActivity extends AppCompatActivity
         // Initialize shared ViewModel
         viewModel = new ViewModelProvider(this).get(CurrencyViewModel.class);
 
+        // AUTO-UPDATE REQUIREMENT: Fetch currency data on EVERY startup
+        // This ensures fresh exchange rates even after configuration changes or app restart
+        // This triggers the Handler+Thread pattern in CurrencyRepository
+        Log.d(TAG, "Initiating currency data fetch on startup...");
+        viewModel.fetchCurrencyData();
+
         // Load SummaryFragment on first launch (shows main currencies only)
         if (savedInstanceState == null) {
             loadSummaryFragment();
 
-            // Fetch currency data from RSS feed using background thread
-            // This triggers the Handler+Thread pattern in CurrencyRepository
-            Log.d(TAG, "Initiating currency data fetch...");
-            viewModel.fetchCurrencyData();
+            // AUTO-UPDATE REQUIREMENT: Start periodic updates at regular intervals
+            // This enables automatic background updates every AUTO_UPDATE_INTERVAL_MS
+            Log.d(TAG, "Starting automatic periodic updates...");
+            viewModel.startAutoUpdate();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Resume auto-updates when app comes to foreground
+        if (!viewModel.isAutoUpdateEnabled()) {
+            Log.d(TAG, "Resuming auto-update on activity resume");
+            viewModel.startAutoUpdate();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Pause auto-updates when app goes to background to save battery/data
+        if (viewModel.isAutoUpdateEnabled()) {
+            Log.d(TAG, "Pausing auto-update on activity pause");
+            viewModel.stopAutoUpdate();
         }
     }
 
