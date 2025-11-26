@@ -18,7 +18,6 @@ import java.util.List;
 
 /**
  * RecyclerView Adapter for displaying currency exchange rates
- * Follows MPD_03a1_RecyclerView pattern with ViewHolder
  * Implements color coding based on exchange rate strength
  * Uses color resources from colors.xml following lab pattern
  */

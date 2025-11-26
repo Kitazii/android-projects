@@ -48,7 +48,6 @@ public class CurrencyRepository {
 
     /**
      * Fetches and parses currency data from RSS feed using background thread
-     * This method implements the Handler pattern following ProgressBar_solutions example
      *
      * Threading approach:
      * 1. Creates Handler on main thread (for UI updates)

@@ -21,7 +21,7 @@ public class CurrencyViewModel extends ViewModel {
     // Auto-update configuration
     // Default: 1 hour (3600000 ms) - can be reduced for demo purposes
     // For demo: use 5 minutes (300000 ms) or even 1 minute (60000 ms)
-    private static final long AUTO_UPDATE_INTERVAL_MS = 300000; // 5 minutes for demo
+    private static final long AUTO_UPDATE_INTERVAL_MS = 60000; // 1 minutes for demo
 
     private final CurrencyRepository repository;
     private final MutableLiveData<List<CurrencyRate>> currencyRates;

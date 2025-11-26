@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">FXMate</string>
+    <string name="currency_flag">Currency flag</string>
+    <string name="gbp_usd"><![CDATA[GBP -> USD]]></string>
+    <string name="_1_24">1,24</string>
 </resources>

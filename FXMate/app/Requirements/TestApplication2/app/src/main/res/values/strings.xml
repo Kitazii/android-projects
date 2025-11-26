@@ -1,5 +1,0 @@
-<resources>
-    <string name="app_name">TestApplication2</string>
-    <string name="welcome_message">Welcome to Mobile Platform Development</string>
-    <string name="exit_message">Press to Exit</string>
-</resources>
